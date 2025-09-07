@@ -1,5 +1,3 @@
----@diagnostic disable: need-check-nil
-
 local M = {}
 local config = {
   default_title = "HELLO WORLD",
@@ -55,7 +53,7 @@ end
 ---make a comment block
 ---@param opts? mkcmt.comment.Opts
 function M.comment(opts)
-  local title = opts.title or vim.fn.input("title: ")
+  local title = (opts or {}).title or vim.fn.input("title: ")
   title = title == "" and config.default_title or title
 
   local pre, suf = get_comment_str()
@@ -82,7 +80,7 @@ function M.comment(opts)
     :format(pre, chs.c.l, ("-"):rep(dashes), chs.c.r, suf)
   local lines = { line, mdl, line }
 
-  local row = vim.api.nvim_win_get_cursor(0)[1]
+  -- local row = vim.api.nvim_win_get_cursor(0)[1]
   vim.api.nvim_put(lines, "l", true, true)
 end
 
