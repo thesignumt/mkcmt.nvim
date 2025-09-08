@@ -1,3 +1,6 @@
+-- +-------------------------------------------------------+
+-- [                        config                         ]
+-- +-------------------------------------------------------+
 local M = {}
 local config = {
   default_title = "HELLO WORLD",
@@ -9,6 +12,10 @@ local config = {
     c = { l = "+", r = "+" },
   },
 }
+
+-- +-------------------------------------------------------+
+-- [                         setup                         ]
+-- +-------------------------------------------------------+
 
 --- @class mkcmt.setup.Opts
 --- @inlinedoc
@@ -40,6 +47,10 @@ function M.setup(opts)
   end
 end
 
+-- +-------------------------------------------------------+
+-- [                       functions                       ]
+-- +-------------------------------------------------------+
+
 ---delete last selection
 ---@param visual boolean
 local function del_lsel(visual)
@@ -51,6 +62,7 @@ local function del_lsel(visual)
 
   vim.api.nvim_buf_set_lines(0, start_line - 1, end_line, false, {})
 end
+
 local function get_comment_str()
   local cs = vim.bo.commentstring or "# %s"
   local pre = cs:match("^(.*)%%s") or ""
