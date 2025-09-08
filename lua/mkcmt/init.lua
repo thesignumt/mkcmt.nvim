@@ -62,10 +62,10 @@ function M.comment(opts)
     local total_width = math.max(config.min_width, #title + config.padding * 2)
 
     -- Center the title
-    local space = total_width - #title - #pre - #suf - 4
+    local space = total_width - #title - #pre - #suf
     local left = math.floor(space / 2)
     local right = space - left
-    local mdl = ("%s%s%s  %s  %s%s%s"):format(
+    local mdl = ("%s"):rep(7):format(
       pre,
       chs.m.l,
       (" "):rep(left - #chs.m.l),
