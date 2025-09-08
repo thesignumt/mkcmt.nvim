@@ -40,6 +40,17 @@ function M.setup(opts)
   end
 end
 
+---delete last selection
+---@param visual boolean
+local function del_lsel(visual)
+  if not visual then
+    return
+  end
+  local start_line = vim.fn.line("'<")
+  local end_line = vim.fn.line("'>")
+
+  vim.api.nvim_buf_set_lines(0, start_line - 1, end_line, false, {})
+end
 local function get_comment_str()
   local cs = vim.bo.commentstring or "# %s"
   local pre = cs:match("^(.*)%%s") or ""
@@ -47,6 +58,42 @@ local function get_comment_str()
   return pre, suf
 end
 
+---make comment block
+---@param title string
+---@param after boolean
+---@param visual boolean
+local function mkcmt(title, after, visual)
+  local pre, suf = get_comment_str()
+  local chs = config.chs
+  local total_width = math.max(config.min_width, #title + config.padding * 2)
+
+  -- Center the title
+  local space = total_width - #title - #pre - #suf
+  local left = math.floor(space / 2)
+  local right = space - left
+  local mdl = ("%s"):rep(7):format(
+    pre,
+    chs.m.l,
+    (" "):rep(left - #chs.m.l),
+    title,
+    (" "):rep(right - #chs.m.r),
+    chs.m.r,
+    suf
+  )
+
+  local dashes = total_width - #pre - #suf - #chs.c.l - #chs.c.r
+  local line = ("%s")
+    :rep(5)
+    :format(pre, chs.c.l, ("-"):rep(dashes), chs.c.r, suf)
+  local lines = { line, mdl, line }
+
+  del_lsel(visual)
+  vim.api.nvim_put(lines, "l", after, true)
+end
+
+-- +-------------------------------------------------------+
+-- [                        COMMENT                        ]
+-- +-------------------------------------------------------+
 --- @class mkcmt.comment.Opts
 --- @field after? boolean If true insert after cursor (like `p`), or before (like `P`).
 --- @field title? string set the title
@@ -56,46 +103,17 @@ end
 function M.comment(opts)
   opts = opts or {}
   local after = opts.after == true
-
-  local function mkcmt(title)
-    local pre, suf = get_comment_str()
-    local chs = config.chs
-    local total_width = math.max(config.min_width, #title + config.padding * 2)
-
-    -- Center the title
-    local space = total_width - #title - #pre - #suf
-    local left = math.floor(space / 2)
-    local right = space - left
-    local mdl = ("%s"):rep(7):format(
-      pre,
-      chs.m.l,
-      (" "):rep(left - #chs.m.l),
-      title,
-      (" "):rep(right - #chs.m.r),
-      chs.m.r,
-      suf
-    )
-
-    local dashes = total_width - #pre - #suf - #chs.c.l - #chs.c.r
-    local line = ("%s")
-      :rep(5)
-      :format(pre, chs.c.l, ("-"):rep(dashes), chs.c.r, suf)
-    local lines = { line, mdl, line }
-
-    -- local row = vim.api.nvim_win_get_cursor(0)[1]
-    vim.api.nvim_put(lines, "l", after, true)
-  end
+  local visual = vim.fn.mode() == "V"
 
   if opts.title then
-    mkcmt(opts.title)
+    mkcmt(opts.title, after, visual)
   else
     vim.ui.input({ prompt = "title: " }, function(input)
-      if input == nil then
+      if not input then
         return
       end
 
-      local title = input == "" and config.default_title or input
-      mkcmt(title)
+      mkcmt(input == "" and config.default_title or input, after, visual)
     end)
   end
 end
