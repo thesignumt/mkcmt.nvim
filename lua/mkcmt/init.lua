@@ -3,10 +3,10 @@
 -- +-------------------------------------------------------+
 local M = {}
 local config = {
-  default_title = "HELLO WORLD",
+  default_header = "HELLO WORLD",
   cmd = true,
   min_width = 60, -- minimum width of the block
-  padding = 10, -- extra spacing around title
+  padding = 10, -- extra spacing around header
   chs = {
     m = { l = "[", r = "]" },
     c = { l = "+", r = "+" },
@@ -20,8 +20,8 @@ local config = {
 --- @class mkcmt.setup.Opts
 --- @inlinedoc
 ---
---- The default title when no title is provided when there is a prompt.
---- @field default_title? string
+--- The default header when no header is provided when there is a prompt.
+--- @field default_header? string
 ---
 --- If true will make a user command MkCmt
 --- @field cmd? boolean
@@ -29,7 +29,7 @@ local config = {
 --- Minimum width of the block
 --- @field min_width? integer
 ---
---- Extra spacing around title
+--- Extra spacing around header
 --- @field padding? integer
 ---
 --- custom characters
@@ -71,23 +71,23 @@ local function get_comment_str()
 end
 
 ---make comment block
----@param title string
+---@param header string
 ---@param after boolean
 ---@param visual boolean
-local function mkcmt(title, after, visual)
+local function mkcmt(header, after, visual)
   local pre, suf = get_comment_str()
   local chs = config.chs
-  local total_width = math.max(config.min_width, #title + config.padding * 2)
+  local total_width = math.max(config.min_width, #header + config.padding * 2)
 
-  -- Center the title
-  local space = total_width - #title - #pre - #suf
+  -- Center the header
+  local space = total_width - #header - #pre - #suf
   local left = math.floor(space / 2)
   local right = space - left
   local mdl = ("%s"):rep(7):format(
     pre,
     chs.m.l,
     (" "):rep(left - #chs.m.l),
-    title,
+    header,
     (" "):rep(right - #chs.m.r),
     chs.m.r,
     suf
@@ -108,7 +108,7 @@ end
 -- +-------------------------------------------------------+
 --- @class mkcmt.comment.Opts
 --- @field after? boolean If true insert after cursor (like `p`), or before (like `P`).
---- @field title? string set the title
+--- @field header? string set the header
 
 ---make a comment block
 ---@param opts? mkcmt.comment.Opts
@@ -117,15 +117,15 @@ function M.comment(opts)
   local after = opts.after == true
   local visual = vim.fn.mode() == "V"
 
-  if opts.title then
-    mkcmt(opts.title, after, visual)
+  if opts.header then
+    mkcmt(opts.header, after, visual)
   else
-    vim.ui.input({ prompt = "title: " }, function(input)
+    vim.ui.input({ prompt = "header: " }, function(input)
       if not input then
         return
       end
 
-      mkcmt(input == "" and config.default_title or input, after, visual)
+      mkcmt(input == "" and config.default_header or input, after, visual)
     end)
   end
 end
