@@ -55,6 +55,7 @@ end
 ---@param opts? mkcmt.comment.Opts
 function M.comment(opts)
   opts = opts or {}
+  local after = opts.after == true
 
   local function mkcmt(title)
     local pre, suf = get_comment_str()
@@ -82,7 +83,7 @@ function M.comment(opts)
     local lines = { line, mdl, line }
 
     -- local row = vim.api.nvim_win_get_cursor(0)[1]
-    vim.api.nvim_put(lines, "l", opts.after, true)
+    vim.api.nvim_put(lines, "l", after, true)
   end
 
   if opts.title then
