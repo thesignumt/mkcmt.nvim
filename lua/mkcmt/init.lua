@@ -48,12 +48,14 @@ local function get_comment_str()
 end
 
 --- @class mkcmt.comment.Opts
+--- @field after? boolean If true insert after cursor (like `p`), or before (like `P`).
 --- @field title? string set the title
 
 ---make a comment block
 ---@param opts? mkcmt.comment.Opts
 function M.comment(opts)
-  local title = (opts or {}).title or vim.fn.input("title: ")
+  opts = opts or {}
+  local title = opts.title or vim.fn.input("title: ")
   title = title == "" and config.default_title or title
 
   local pre, suf = get_comment_str()
@@ -81,7 +83,7 @@ function M.comment(opts)
   local lines = { line, mdl, line }
 
   -- local row = vim.api.nvim_win_get_cursor(0)[1]
-  vim.api.nvim_put(lines, "l", true, true)
+  vim.api.nvim_put(lines, "l", opts.after, true)
 end
 
 return M
