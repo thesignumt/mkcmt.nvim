@@ -1,7 +1,10 @@
+local M = {}
+
+-- TODO: make custom borders
+
 -- +-------------------------------------------------------+
 -- [                        config                         ]
 -- +-------------------------------------------------------+
-local M = {}
 local config = {
   default_header = "HELLO WORLD",
   cmd = true,
@@ -33,7 +36,7 @@ local config = {
 --- @field padding? integer
 ---
 --- custom characters
---- @field chs? table
+--- @field chs? table|string
 
 --- Setup MkCmt user preferences
 --- @param opts? mkcmt.setup.Opts
