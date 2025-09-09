@@ -35,6 +35,7 @@ local config = {
 
 --- Setup MkCmt user preferences
 --- @param opts? mkcmt.setup.Opts
+--- @return nil
 function M.setup(opts)
   for k, v in pairs(opts or {}) do
     config[k] = v
@@ -51,6 +52,7 @@ end
 
 ---delete last selection
 ---@param visual boolean
+---@return nil
 local function del_lsel(visual)
   if not visual then
     return
