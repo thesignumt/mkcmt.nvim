@@ -88,9 +88,9 @@ end
 ---make comment block
 ---@param header string
 ---@param opts mkcmt.comment.Opts
----@param visual boolean
----@param upper boolean
-local function mkcmt(header, opts, visual, upper)
+---@param data table
+---@return nil
+local function mkcmt(header, opts, data)
   local get = function(str, default)
     return opts[str] or config[str] or default
   end
@@ -110,7 +110,7 @@ local function mkcmt(header, opts, visual, upper)
     pre,
     mid[1],
     (" "):rep(left - #mid[1]),
-    header,
+    header:upper(),
     (" "):rep(right - #mid[2]),
     mid[2],
     suf
@@ -124,7 +124,8 @@ local function mkcmt(header, opts, visual, upper)
   local dl = mkline(b[3])
 
   local lines = { ul, mdl, dl }
-  vim.api.nvim_put(lines, "l", upper, true)
+  del_lsel(data.visual)
+  vim.api.nvim_put(lines, "l", data.after, true)
 end
 
 -- +-------------------------------------------------------+
@@ -138,13 +139,17 @@ end
 
 ---make a comment block
 ---@param opts? mkcmt.comment.Opts
+---@return nil
 function M.comment(opts)
   opts = opts or {}
   local visual = vim.fn.mode() == "V"
+  local after = opts.after == true
   local upper = opts.upper == true
 
+  local data = { after = after, visual = visual, upper = upper }
+
   if opts.header then
-    mkcmt(opts.header, opts, visual, upper)
+    mkcmt(opts.header, opts, data)
   else
     vim.ui.input(
       { prompt = upper and "(upper) " or "" .. "header: " },
@@ -154,7 +159,7 @@ function M.comment(opts)
         end
 
         local header = input == "" and config.default_header or input
-        mkcmt(header, opts, visual, upper)
+        mkcmt(header, opts, data)
       end
     )
   end
