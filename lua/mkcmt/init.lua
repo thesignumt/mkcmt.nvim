@@ -1,7 +1,5 @@
 local M = {}
 
--- TODO: make custom borders
-
 -- +-------------------------------------------------------+
 -- [                        config                         ]
 -- +-------------------------------------------------------+
@@ -10,10 +8,7 @@ local config = {
   cmd = true,
   min_width = 60, -- minimum width of the block
   padding = 10, -- extra spacing around header
-  chs = {
-    m = { l = "[", r = "]" },
-    c = { l = "+", r = "+" },
-  },
+  border = "+-+[]+-+",
 }
 
 -- +-------------------------------------------------------+
@@ -35,8 +30,8 @@ local config = {
 --- Extra spacing around header
 --- @field padding? integer
 ---
---- custom characters
---- @field chs? table|string
+--- Borders..
+--- @field border? string
 
 --- Setup MkCmt user preferences
 --- @param opts? mkcmt.setup.Opts
@@ -73,37 +68,63 @@ local function get_comment_str()
   return pre, suf
 end
 
+local function get_borders(str)
+  local result = {
+    { str:sub(1, 3):byte(1, 3) },
+    { str:sub(4, 5):byte(1, 2) },
+    { str:sub(6, 8):byte(1, 3) },
+  }
+
+  -- convert bytes back to characters
+  for _, t in ipairs(result) do
+    for j = 1, #t do
+      t[j] = string.char(t[j])
+    end
+  end
+
+  return result
+end
+
 ---make comment block
 ---@param header string
----@param after boolean
+---@param opts mkcmt.comment.Opts
 ---@param visual boolean
-local function mkcmt(header, after, visual)
+---@param upper boolean
+local function mkcmt(header, opts, visual, upper)
+  local get = function(str, default)
+    return opts[str] or config[str] or default
+  end
   local pre, suf = get_comment_str()
-  local chs = config.chs
-  local total_width = math.max(config.min_width, #header + config.padding * 2)
+  local min_width = get("min_width")
+  ---@cast min_width integer
+  local total_width = math.max(min_width, #header + get("padding") * 2)
+
+  local b = get_borders(get("border", "+-+[]+-+"))
 
   -- Center the header
   local space = total_width - #header - #pre - #suf
   local left = math.floor(space / 2)
   local right = space - left
+  local mid = b[2]
   local mdl = ("%s"):rep(7):format(
     pre,
-    chs.m.l,
-    (" "):rep(left - #chs.m.l),
+    mid[1],
+    (" "):rep(left - #mid[1]),
     header,
-    (" "):rep(right - #chs.m.r),
-    chs.m.r,
+    (" "):rep(right - #mid[2]),
+    mid[2],
     suf
   )
 
-  local dashes = total_width - #pre - #suf - #chs.c.l - #chs.c.r
-  local line = ("%s")
-    :rep(5)
-    :format(pre, chs.c.l, ("-"):rep(dashes), chs.c.r, suf)
-  local lines = { line, mdl, line }
+  local function mkline(chs)
+    local mdls = total_width - #pre - #suf - #chs[1] - #chs[3]
+    return ("%s"):rep(5):format(pre, chs[1], chs[2]:rep(mdls), chs[3], suf)
+  end
+  local ul = mkline(b[1])
+  local dl = mkline(b[3])
 
-  del_lsel(visual)
-  vim.api.nvim_put(lines, "l", after, true)
+  local lines = { ul, mdl, dl }
+  vim.api.nvim_put(lines, "l", upper, true)
 end
 
 -- +-------------------------------------------------------+
@@ -111,25 +132,31 @@ end
 -- +-------------------------------------------------------+
 --- @class mkcmt.comment.Opts
 --- @field after? boolean If true insert after cursor (like `p`), or before (like `P`).
+--- @field border? string border. e.g. default: '+-+[]+-+'
 --- @field header? string set the header
+--- @field upper? boolean force upper the header
 
 ---make a comment block
 ---@param opts? mkcmt.comment.Opts
 function M.comment(opts)
   opts = opts or {}
-  local after = opts.after == true
   local visual = vim.fn.mode() == "V"
+  local upper = opts.upper == true
 
   if opts.header then
-    mkcmt(opts.header, after, visual)
+    mkcmt(opts.header, opts, visual, upper)
   else
-    vim.ui.input({ prompt = "header: " }, function(input)
-      if not input then
-        return
-      end
+    vim.ui.input(
+      { prompt = upper and "(upper) " or "" .. "header: " },
+      function(input)
+        if not input then
+          return
+        end
 
-      mkcmt(input == "" and config.default_header or input, after, visual)
-    end)
+        local header = input == "" and config.default_header or input
+        mkcmt(header, opts, visual, upper)
+      end
+    )
   end
 end
 
