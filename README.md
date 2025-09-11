@@ -7,6 +7,10 @@ It integrates with `vim.ui.input` for prompts, respects your buffer's `commentst
 
 ---
 
+## 🎥 Demo
+
+---
+
 ## ✨ Features
 
 - Create neat, bordered comment blocks.
