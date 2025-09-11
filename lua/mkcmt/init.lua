@@ -112,7 +112,7 @@ local function mkcmt(header, opts, data)
     pre,
     mid[1],
     (" "):rep(left - #mid[1]),
-    header:upper(),
+    data.upper and header:upper() or header,
     (" "):rep(right - #mid[2]),
     mid[2],
     suf
