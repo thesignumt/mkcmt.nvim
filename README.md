@@ -30,7 +30,7 @@ Use your favorite plugin manager:
 
 ```lua
 {
-  "sigmacodeslol/mkcmt.nvim",
+  "thesignumt/mkcmt.nvim",
   config = function()
     require("mkcmt").setup()
   end,
@@ -41,7 +41,7 @@ Use your favorite plugin manager:
 
 ```lua
 use {
-  "sigmacodeslol/mkcmt.nvim",
+  "thesignumt/mkcmt.nvim",
   config = function()
     require("mkcmt").setup()
   end,
