@@ -37,9 +37,7 @@ local config = {
 --- @param opts? mkcmt.setup.Opts
 --- @return nil
 function M.setup(opts)
-  for k, v in pairs(opts or {}) do
-    config[k] = v
-  end
+  config = vim.tbl_extend("force", config, opts or {})
 
   if config.cmd then
     vim.api.nvim_create_user_command("MkCmt", M.comment, {})
