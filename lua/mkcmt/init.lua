@@ -67,9 +67,8 @@ end
 
 local function get_comment_str()
   local cs = vim.bo.commentstring or "# %s"
-  local pre = cs:match("^(.*)%%s") or ""
-  local suf = cs:match("%%s(.*)$") or ""
-  return pre, suf
+  local pre, suf = cs:match("^(.*)%%s(.*)$")
+  return pre or "", suf or ""
 end
 
 local function get_borders(str)
