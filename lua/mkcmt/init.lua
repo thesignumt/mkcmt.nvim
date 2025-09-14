@@ -146,7 +146,7 @@ function M.comment(opts)
     mkcmt(opts.header, opts, data)
   else
     vim.ui.input(
-      { prompt = upper and "(upper) " or "" .. "header: " },
+      { prompt = (upper and "(upper) " or "") .. "header: " },
       function(input)
         if not input then
           return
