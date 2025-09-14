@@ -55,10 +55,14 @@ local function del_lsel(visual)
   if not visual then
     return
   end
-  local start_line = vim.fn.line("'<")
-  local end_line = vim.fn.line("'>")
 
-  vim.api.nvim_buf_set_lines(0, start_line - 1, end_line, false, {})
+  vim.api.nvim_buf_set_lines(
+    0,
+    vim.fn.line("'<") - 1,
+    vim.fn.line("'>"),
+    false,
+    {}
+  )
 end
 
 local function get_comment_str()
