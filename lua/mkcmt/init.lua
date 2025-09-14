@@ -72,20 +72,11 @@ local function get_comment_str()
 end
 
 local function get_borders(str)
-  local result = {
-    { str:sub(1, 3):byte(1, 3) },
-    { str:sub(4, 5):byte(1, 2) },
-    { str:sub(6, 8):byte(1, 3) },
+  return {
+    { str:sub(1, 1), str:sub(2, 2), str:sub(3, 3) },
+    { str:sub(4, 4), str:sub(5, 5) },
+    { str:sub(6, 6), str:sub(7, 7), str:sub(8, 8) },
   }
-
-  -- convert bytes back to characters
-  for _, t in ipairs(result) do
-    for j = 1, #t do
-      t[j] = string.char(t[j])
-    end
-  end
-
-  return result
 end
 
 ---make comment block
