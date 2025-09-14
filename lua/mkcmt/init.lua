@@ -100,19 +100,19 @@ local function mkcmt(header, opts, data)
   local left = math.floor(space / 2)
   local right = space - left
   local mid = b[2]
-  local mdl = ("%s"):rep(7):format(
+  local mdl = table.concat({
     pre,
     mid[1],
     (" "):rep(left - #mid[1]),
     data.upper and header:upper() or header,
     (" "):rep(right - #mid[2]),
     mid[2],
-    suf
-  )
+    suf,
+  })
 
   local function mkline(chs)
     local mdls = total_width - #pre - #suf - #chs[1] - #chs[3]
-    return ("%s"):rep(5):format(pre, chs[1], chs[2]:rep(mdls), chs[3], suf)
+    return table.concat({ pre, chs[1], chs[2]:rep(mdls), chs[3], suf })
   end
   local ul = mkline(b[1])
   local dl = mkline(b[3])
