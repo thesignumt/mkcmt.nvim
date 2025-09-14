@@ -85,8 +85,8 @@ end
 ---@param data table
 ---@return nil
 local function mkcmt(header, opts, data)
-  local get = function(str, default)
-    return opts[str] or config[str] or default
+  local function get(opt, fallback)
+    return vim.F.if_nil(opts[opt], config[opt]) or fallback
   end
   local pre, suf = get_comment_str()
   local min_width = get("min_width")
