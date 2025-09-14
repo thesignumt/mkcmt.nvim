@@ -141,21 +141,16 @@ function M.comment(opts)
   local upper = opts.upper == true
 
   local data = { after = after, visual = visual, upper = upper }
+  local prompt = (upper and "(upper) " or "") .. "header: "
 
   if opts.header then
     mkcmt(opts.header, opts, data)
   else
-    vim.ui.input(
-      { prompt = (upper and "(upper) " or "") .. "header: " },
-      function(input)
-        if not input then
-          return
-        end
-
-        local header = input == "" and config.default_header or input
-        mkcmt(header, opts, data)
+    vim.ui.input({ prompt = prompt }, function(input)
+      if input then
+        mkcmt(input == "" and config.default_header or input, opts, data)
       end
-    )
+    end)
   end
 end
 
