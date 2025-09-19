@@ -5,9 +5,11 @@
 `mkcmt.nvim` helps you quickly generate centered, bordered comment blocks with customizable headers.
 It integrates with `vim.ui.input` for prompts, respects your buffer's `commentstring`, and can be configured to match your style.
 
-<!-- --- -->
-<!---->
-<!-- ## 🎥 Demo -->
+---
+
+## 🎥 Demo
+
+https://github.com/user-attachments/assets/bc073187-6e3e-4c96-9ff3-2774be539811
 
 ---
 
