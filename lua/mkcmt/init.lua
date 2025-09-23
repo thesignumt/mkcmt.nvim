@@ -1,28 +1,49 @@
-local Config = require("mkcmt.config")
+local Config = require("mkcmt.Config")
 local Utils = require("mkcmt.utils")
 
----@class Mkcmt
----@field config MkcmtConfig
-local Mkcmt = {}
+local M = {}
 
-Mkcmt.__index = {}
+-- +-------------------------------------------------------+
+-- [                         setup                         ]
+-- +-------------------------------------------------------+
 
----@return Mkcmt
-function Mkcmt:new()
-  local mkcmt = setmetatable({
-    config = Config,
-  }, self)
-  return mkcmt
+--- @class mkcmt.setup.Opts
+--- @inlinedoc
+---
+--- The default header when no header is provided when there is a prompt.
+--- @field default_header? string
+---
+--- If true will make a user command MkCmt
+--- @field cmd? boolean
+---
+--- Minimum width of the block
+--- @field min_width? integer
+---
+--- Extra spacing around header
+--- @field padding? integer
+---
+--- Borders..
+--- @field border? string
+
+--- Setup MkCmt user preferences
+--- @param opts? mkcmt.setup.Opts
+--- @return nil
+function M.setup(opts)
+  Config = vim.tbl_extend("force", Config, opts or {})
+
+  if Config.cmd then
+    vim.api.nvim_create_user_command("MkCmt", M.comment, {})
+  end
 end
 
 ---make comment block
 ---@param header string
 ---@param opts mkcmt.comment.Opts
 ---@param data table
----@return Mkcmt
-function Mkcmt:_mkcmt(header, opts, data)
+---@return nil
+local function mkcmt(header, opts, data)
   local function get(opt, fallback)
-    return vim.F.if_nil(opts[opt], self.config[opt]) or fallback
+    return vim.F.if_nil(opts[opt], Config[opt]) or fallback
   end
   local pre, suf = Utils:get_comment_str()
   local min_width = get("min_width")
@@ -56,8 +77,6 @@ function Mkcmt:_mkcmt(header, opts, data)
   local lines = { ul, mdl, dl }
   Utils:del_lsel(data.visual)
   vim.api.nvim_put(lines, "l", data.after, true)
-
-  return self
 end
 
 -- +-------------------------------------------------------+
@@ -71,8 +90,8 @@ end
 
 ---make a comment block
 ---@param opts? mkcmt.comment.Opts
----@return Mkcmt
-function Mkcmt:comment(opts)
+---@return nil
+function M.comment(opts)
   opts = opts or {}
   local visual = vim.fn.mode() == "V"
   local after = opts.after == true
@@ -82,35 +101,15 @@ function Mkcmt:comment(opts)
   local prompt = (upper and "(upper) " or "") .. "header: "
 
   if opts.header then
-    self:_mkcmt(opts.header, opts, data)
+    mkcmt(opts.header, opts, data)
   else
     vim.ui.input({ prompt = prompt }, function(input)
-      local header = input == "" and self.config.default_header or input
       if input then
-        self:_mkcmt(header, opts, data)
+        local header = input == "" and Config.default_header or input
+        mkcmt(header, opts, data)
       end
     end)
   end
-
-  return self
 end
 
-local the_mkcmt = Mkcmt:new()
-
---- Setup MkCmt
---- @param opts? MkcmtConfig
---- @return Mkcmt
-function Mkcmt:setup(opts)
-  self.config = vim.tbl_extend("force", self.config, opts or {})
-
-  if self.config.cmd then
-    -- TODO: extend this. maybe :Mkcmt upper... etc
-    vim.api.nvim_create_user_command("MkCmt", function()
-      self:comment()
-    end, {})
-  end
-
-  return self
-end
-
-return the_mkcmt
+return M
