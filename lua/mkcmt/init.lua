@@ -3,30 +3,8 @@ local Utils = require("mkcmt.utils")
 
 local M = {}
 
--- +-------------------------------------------------------+
--- [                         setup                         ]
--- +-------------------------------------------------------+
-
---- @class mkcmt.setup.Opts
---- @inlinedoc
----
---- The default header when no header is provided when there is a prompt.
---- @field default_header? string
----
---- If true will make a user command MkCmt
---- @field cmd? boolean
----
---- Minimum width of the block
---- @field min_width? integer
----
---- Extra spacing around header
---- @field padding? integer
----
---- Borders..
---- @field border? string
-
 --- Setup MkCmt user preferences
---- @param opts? mkcmt.setup.Opts
+--- @param opts? MkcmtConfig
 --- @return nil
 function M.setup(opts)
   Config = vim.tbl_extend("force", Config, opts or {})
