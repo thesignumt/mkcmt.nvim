@@ -60,6 +60,7 @@ end
 -- +-------------------------------------------------------+
 -- [                        COMMENT                        ]
 -- +-------------------------------------------------------+
+
 --- @class mkcmt.comment.Opts
 --- @field after? boolean If true insert after cursor (like `p`), or before (like `P`).
 --- @field border? string border. e.g. default: '+-+[]+-+'
