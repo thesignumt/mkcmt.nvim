@@ -23,7 +23,7 @@ function Utils:del_lsel(visual)
   )
 end
 
-function Utils:get_comment_str()
+function Utils:get_cmt_str()
   local cs = vim.bo.commentstring or "# %s"
   local pre, suf = cs:match("^(.*)%%s(.*)$")
   return pre or "", suf or ""

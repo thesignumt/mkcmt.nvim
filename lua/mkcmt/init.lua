@@ -23,7 +23,7 @@ local function mkcmt(header, opts, data)
   local function get(opt, fallback)
     return vim.F.if_nil(opts[opt], Config[opt]) or fallback
   end
-  local pre, suf = Utils:get_comment_str()
+  local pre, suf = Utils:get_cmt_str()
   local min_width = get("min_width")
   ---@cast min_width integer
   local total_width = math.max(min_width, #header + get("padding") * 2)
