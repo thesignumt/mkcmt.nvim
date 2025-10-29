@@ -19,7 +19,11 @@ function M.setup(opts)
   end, true, "border must be a string of length 8")
 
   if Config.cmd then
-    api.nvim_create_user_command("MkCmt", M.comment, {})
+    api.nvim_create_user_command(
+      "MkCmt",
+      M.comment,
+      { desc = "Make comment block" }
+    )
   end
 end
 
