@@ -10,6 +10,14 @@ local M = {}
 function M.setup(opts)
   Config = vim.tbl_extend("force", Config, opts or {})
 
+  vim.validate("default_header", Config.default_header, "string", true)
+  vim.validate("cmd", Config.cmd, "boolean", true)
+  vim.validate("min_width", Config.min_width, "number", true)
+  vim.validate("padding", Config.padding, "number", true)
+  vim.validate("border", Config.border, function(v)
+    return type(v) == "string" and #v == 8
+  end, true, "border must be a string of length 8")
+
   if Config.cmd then
     api.nvim_create_user_command("MkCmt", M.comment, {})
   end
