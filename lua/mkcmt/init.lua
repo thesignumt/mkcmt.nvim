@@ -1,3 +1,4 @@
+local api = vim.api
 local Config = require("mkcmt.Config") ---@type MkcmtConfig
 local Utils = require("mkcmt.utils")
 
@@ -10,7 +11,7 @@ function M.setup(opts)
   Config = vim.tbl_extend("force", Config, opts or {})
 
   if Config.cmd then
-    vim.api.nvim_create_user_command("MkCmt", M.comment, {})
+    api.nvim_create_user_command("MkCmt", M.comment, {})
   end
 end
 
@@ -54,7 +55,7 @@ local function mkcmt(header, opts, data)
 
   local lines = { ul, mdl, dl }
   Utils:del_lsel(data.visual)
-  vim.api.nvim_put(lines, "l", data.after, true)
+  api.nvim_put(lines, "l", data.after, true)
 end
 
 -- +-------------------------------------------------------+
