@@ -1,4 +1,4 @@
-local Config = require("mkcmt.Config")
+local Config = require("mkcmt.Config") ---@type MkcmtConfig
 local Utils = require("mkcmt.utils")
 
 local M = {}
