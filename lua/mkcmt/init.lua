@@ -26,7 +26,6 @@ local function mkcmt(header, opts, data)
   end
   local pre, suf = Utils:get_cmt_str()
   local min_width = get("min_width")
-  ---@cast min_width integer
   local total_width = math.max(min_width, #header + get("padding") * 2)
 
   local b = Utils:get_borders(get("border", "+-+[]+-+"))
