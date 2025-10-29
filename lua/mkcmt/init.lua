@@ -84,7 +84,7 @@ end
 ---@return nil
 function M.comment(opts)
   opts = opts or {}
-  local visual = vim.fn.mode() == "V"
+  local visual = vim.fn.mode():match("^V") or vim.fn.mode() == "\22"
   local after = opts.after == true
   local upper = opts.upper == true
 
