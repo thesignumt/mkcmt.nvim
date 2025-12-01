@@ -21,6 +21,7 @@ https://github.com/user-attachments/assets/bc073187-6e3e-4c96-9ff3-2774be539811
 - Respects buffer `commentstring` (`#`, `//`, `--`, etc.).
 - Optional `:MkCmt` command.
 - Works with **visual selections** (replaces last selection with comment block).
+- **Optional:** For enhanced visuals of `vim.ui.input`, it is recommended to use [`snacks.nvim`](https://github.com/folke/snacks.nvim) with its **input** feature enabled.
 
 ---
 
