@@ -59,6 +59,15 @@ vim.pack.add({
 })
 ```
 
+[`mini.deps`](https://github.com/nvim-mini/mini.deps)
+
+```lua
+local add = MiniDeps.add
+add({
+    source = "https://github.com/thesignumt/mkcmt.nvim"
+})
+```
+
 ---
 
 ## ⚙️ Configuration
