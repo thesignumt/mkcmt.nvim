@@ -29,7 +29,7 @@ https://github.com/user-attachments/assets/bc073187-6e3e-4c96-9ff3-2774be539811
 
 Use your favorite plugin manager:
 
-**lazy.nvim**
+[`lazy.nvim`](https://github.com/folke/lazy.nvim)
 
 ```lua
 {
@@ -40,7 +40,7 @@ Use your favorite plugin manager:
 }
 ```
 
-**packer.nvim**
+[`packer.nvim`](https://github.com/wbthomason/packer.nvim)
 
 ```lua
 use {
