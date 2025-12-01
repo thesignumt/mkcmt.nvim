@@ -51,6 +51,14 @@ use {
 }
 ```
 
+**vim.pack**
+
+```lua
+vim.pack.add({
+    'https://github.com/thesignumt/mkcmt.nvim'
+})
+```
+
 ---
 
 ## ⚙️ Configuration
