@@ -109,7 +109,7 @@ end
 --- @field put_after? boolean If true insert after cursor (like `p`), or before (like `P`).
 --- @field border? string border. e.g. default: '+-+[]+-+'
 --- @field header? string set the header
---- @field upper? boolean force upper the header
+--- @field uppercase? boolean force upper the header
 --- @field oneline? boolean render a single-line divider (ignores header)
 --- @field oneline_char? string override fill character
 
@@ -122,7 +122,7 @@ function M.comment(opts)
   local mode = vim.fn.mode()
   local visual = mode:match("^V") or mode == "\22"
   local put_after = opts.put_after == true
-  local upper = opts.upper == true
+  local upper = opts.uppercase == true
   local oneline = (opts.oneline ~= nil and opts.oneline or Config.oneline)
     == true
 
