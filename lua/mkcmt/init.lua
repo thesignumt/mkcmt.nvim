@@ -123,7 +123,8 @@ function M.comment(opts)
   local visual = mode:match("^V") or mode == "\22"
   local put_after = opts.put_after == true
   local upper = opts.upper == true
-  local oneline = vim.F.if_nil(opts.oneline, Config.oneline) == true
+  local oneline = (opts.oneline ~= nil and opts.oneline or Config.oneline)
+    == true
 
   local data = {
     put_after = put_after,
