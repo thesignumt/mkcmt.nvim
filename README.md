@@ -2,14 +2,14 @@
 
 > 📝 A simple Neovim plugin to create decorative comment blocks around headers.
 
-`mkcmt.nvim` helps you quickly generate centered, bordered comment blocks with customizable headers.
-It integrates with `vim.ui.input` for prompts, respects your buffer's `commentstring`, and can be configured to match your style.
+`mkcmt.nvim` lets you quickly generate **centered, bordered comment blocks** with customizable headers.
+It integrates with `vim.ui.input` for prompts, respects your buffer's `commentstring`, and can be configured to match your coding style.
 
 ---
 
 ## 🎥 Demo
 
-https://github.com/user-attachments/assets/bc073187-6e3e-4c96-9ff3-2774be539811
+[https://github.com/user-attachments/assets/bc073187-6e3e-4c96-9ff3-2774be539811](https://github.com/user-attachments/assets/bc073187-6e3e-4c96-9ff3-2774be539811)
 
 ---
 
@@ -19,9 +19,26 @@ https://github.com/user-attachments/assets/bc073187-6e3e-4c96-9ff3-2774be539811
 - Center headers with configurable padding.
 - Supports **uppercasing** headers.
 - Respects buffer `commentstring` (`#`, `//`, `--`, etc.).
-- Optional `:MkCmt` command.
+- Optional `:MkCmt` user command.
 - Works with **visual selections** (replaces last selection with comment block).
-- **Optional:** For enhanced visuals of `vim.ui.input`, it is recommended to use [`snacks.nvim`](https://github.com/folke/snacks.nvim) with its **input** feature enabled.
+- **Oneline mode:** render a single-line divider instead of a block.
+- **Custom fill character:** override the oneline divider character with `oneline_char`.
+- Recommended for enhanced `vim.ui.input` visuals: requires [`snacks.nvim`](https://github.com/folke/snacks.nvim) with its **input** feature enabled.
+
+**Dependencies:**
+
+```lua
+-- Lazy.nvim example
+{
+  "thesignumt/mkcmt.nvim",
+  dependencies = { "folke/snacks.nvim" },
+  config = function()
+    require("mkcmt").setup()
+  end,
+}
+```
+
+Make sure `snacks.nvim` is installed and its `input` feature is enabled for a better prompt experience.
 
 ---
 
@@ -29,42 +46,48 @@ https://github.com/user-attachments/assets/bc073187-6e3e-4c96-9ff3-2774be539811
 
 Use your favorite plugin manager:
 
-[`lazy.nvim`](https://github.com/folke/lazy.nvim)
+### [`lazy.nvim`](https://github.com/folke/lazy.nvim)
 
 ```lua
 {
   "thesignumt/mkcmt.nvim",
+  dependencies = { "folke/snacks.nvim" },
   config = function()
     require("mkcmt").setup()
   end,
 }
 ```
 
-[`packer.nvim`](https://github.com/wbthomason/packer.nvim)
+### [`packer.nvim`](https://github.com/wbthomason/packer.nvim)
 
 ```lua
 use {
   "thesignumt/mkcmt.nvim",
+  requires = { "folke/snacks.nvim" },
   config = function()
     require("mkcmt").setup()
   end,
 }
 ```
 
-**vim.pack**
+### `vim.pack`
 
 ```lua
 vim.pack.add({
-    'https://github.com/thesignumt/mkcmt.nvim'
+  'https://github.com/thesignumt/mkcmt.nvim'
+})
+vim.pack.add({
+  'https://github.com/folke/snacks.nvim'
 })
 ```
 
-[`mini.deps`](https://github.com/nvim-mini/mini.deps)
+### [`mini.deps`](https://github.com/nvim-mini/mini.deps)
 
 ```lua
 local add = MiniDeps.add
 add({
-    source = "https://github.com/thesignumt/mkcmt.nvim"
+  source = "https://github.com/thesignumt/mkcmt.nvim",
+  dependencies = { "folke/snacks.nvim" },
 })
 ```
 
@@ -72,19 +95,23 @@ add({
 
 ## ⚙️ Configuration
 
-Default configuration:
+Default setup:
 
 ```lua
 require("mkcmt").setup({
-  default_header = "HELLO WORLD", -- fallback header
-  cmd = true,                     -- create :MkCmt user command
+  default_header = "HELLO WORLD",  -- fallback header when prompt is empty
+  cmd = true,                      -- create :MkCmt user command
   min_width = 60,                  -- minimum block width
   padding = 10,                    -- spacing around header
   border = "+-+[]+-+",             -- border characters
+  oneline = false,                 -- render a single-line divider
+  oneline_char = nil,              -- optional custom divider character
 })
 ```
 
-### Example keymaps
+---
+
+## 🔑 Keymaps Example
 
 ```lua
 local mkcmt = require("mkcmt")
@@ -100,11 +127,11 @@ end, { desc = "MkCmt before cursor" })
 
 vim.keymap.set({ "n", "v" }, "<leader>cx", function()
   mkcmt.comment({ after = true, upper = true })
-end, { desc = "MkCmt AFTER (upper)" })
+end, { desc = "MkCmt after cursor (uppercase)" })
 
 vim.keymap.set({ "n", "v" }, "<leader>cX", function()
   mkcmt.comment({ after = false, upper = true })
-end, { desc = "MkCmt BEFORE (upper)" })
+end, { desc = "MkCmt before cursor (uppercase)" })
 ```
 
 ---
@@ -112,16 +139,27 @@ end, { desc = "MkCmt BEFORE (upper)" })
 ## 🖊️ Usage
 
 - `:MkCmt` → prompts for a header, inserts a comment block.
-- `require("mkcmt").comment(opts)`:
-  - `after = true` → insert after cursor.
-  - `upper = true` → uppercase header.
-  - `header = "Custom"` → provide a header directly.
-  - `border = "+-+[]+-+"` → override border style.
+- `require("mkcmt").comment(opts)` accepts:
 
-**Example**
+| Option         | Type    | Description                                               |
+| -------------- | ------- | --------------------------------------------------------- |
+| `after`        | boolean | Insert **after** cursor (`true`) or **before** (`false`). |
+| `upper`        | boolean | Uppercase the header text.                                |
+| `header`       | string  | Provide a header directly, skipping the prompt.           |
+| `border`       | string  | Override border style, e.g., `"+-+[]+-+"`.                |
+| `oneline`      | boolean | Render a single-line divider instead of a block.          |
+| `oneline_char` | string  | Override the character used in oneline mode.              |
+
+**Example:**
 
 ```lua
 :lua require("mkcmt").comment({ header = "Section", after = true })
+```
+
+**Oneline example:**
+
+```lua
+:lua require("mkcmt").comment({ oneline = true, after = true, oneline_char = "-" })
 ```
 
 ---
