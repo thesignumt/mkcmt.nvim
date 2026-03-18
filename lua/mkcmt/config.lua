@@ -4,6 +4,10 @@ local Config = {
   min_width = 60, -- minimum width of the block
   padding = 10, -- extra spacing around header
   border = "+-+[]+-+",
+
+  -- oneline mode
+  oneline = false, -- render divider instead of block
+  oneline_char = nil, -- override fill char (nil = use border)
 }
 
 --- @class MkcmtConfig
@@ -22,5 +26,11 @@ local Config = {
 ---
 --- Borders..
 --- @field border? string
+---
+--- Render a single-line divider (ignores header)
+--- @field oneline? boolean
+---
+--- Override fill character for one-line mode
+--- @field oneline_char? string
 
 return Config

@@ -14,13 +14,12 @@ function Utils:del_lsel(visual)
     return
   end
 
-  vim.api.nvim_buf_set_lines(
-    0,
-    vim.fn.line("'<") - 1,
-    vim.fn.line("'>"),
-    false,
-    {}
-  )
+  local start = vim.fn.line("'<") - 1
+  local finish = vim.fn.line("'>")
+
+  if start < finish then
+    vim.api.nvim_buf_set_lines(0, start, finish, false, {})
+  end
 end
 
 function Utils:get_cmt_str()
